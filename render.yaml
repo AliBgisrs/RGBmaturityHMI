@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: rgb-hmi
+    env: docker
+    plan: starter        # pick a larger plan if you process big TIFFs
+    autoDeploy: true
+    disks:
+      - name: data
+        mountPath: /data
+        sizeGB: 50       # adjust for your imagery
