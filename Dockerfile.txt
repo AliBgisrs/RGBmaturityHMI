@@ -1,0 +1,21 @@
+# Docker for GDAL/GEOS/PROJ + FastAPI
+FROM python:3.11-slim
+
+# System deps for rasterio/fiona/geopandas (GDAL stack)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gdal-bin libgdal-dev libspatialindex-dev libgeos-dev proj-bin libproj-dev build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV GDAL_DATA=/usr/share/gdal
+ENV PROJ_LIB=/usr/share/proj
+WORKDIR /app
+
+# Install Python deps
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# App code
+COPY . .
+
+# Render assigns $PORT; bind to it at runtime
+CMD ["sh","-c","uvicorn main:app --host 0.0.0.0 --port ${PORT}"]
