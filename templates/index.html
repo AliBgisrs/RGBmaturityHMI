@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>HMI Web App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 24px; }
+    .card { max-width: 900px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+    label { display:block; margin:14px 0 6px; font-weight:600; }
+    input[type=text] { width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px; }
+    button { margin-top:18px; padding:10px 16px; border:0; border-radius:10px; background:#111827; color:white; cursor:pointer; }
+    button:hover { background:#0b1220; }
+    pre { white-space: pre-wrap; background: #0b1220; color:#e5e7eb; padding:16px; border-radius:10px; overflow:auto; }
+    .error { color:#b91c1c; font-weight:600; }
+    small { color:#6b7280; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Hue Maturity Index (HMI) – Web App</h1>
+    <p>Provide the paths below. The app will replicate your original pipeline and save outputs under <code>./Output/&lt;layer&gt;/Plot_&lt;PlotID&gt;</code>.</p>
+
+    <form method="post" action="/run">
+      <label for="images_dir">Images Directory (root to scan recursively)</label>
+      <input type="text" id="images_dir" name="images_dir" placeholder="E.g., D:/UAS_Beans/2025/SVREC" required>
+
+      <label for="vector_path">Vector Path (Shapefile .shp or FileGDB .gdb)</label>
+      <input type="text" id="vector_path" name="vector_path" placeholder="E.g., D:/.../New File Geodatabase.gdb OR .../plots.shp" required>
+
+      <label for="layer_name">Layer Name (required for .gdb; ignored for .shp)</label>
+      <input type="text" id="layer_name" name="layer_name" placeholder="E.g., SEVREC2502" required>
+
+      <label for="plot_id">PlotID value</label>
+      <input type="text" id="plot_id" name="plot_id" placeholder="E.g., 2502" required>
+
+      <button type="submit">Run HMI Pipeline</button>
+      <div><small>Sowing date, thresholds, and bins remain identical to your script.</small></div>
+    </form>
+
+    {% if error %}
+      <p class="error">Error: {{ error }}</p>
+    {% endif %}
+
+    {% if result %}
+      <h2>Run Log</h2>
+      <pre>{{ result }}</pre>
+    {% endif %}
+  </div>
+</body>
+</html>
